@@ -1,1 +1,3 @@
-echo school
+#!/bin/bash
+cd /root
+
