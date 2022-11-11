@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Script to diplay bash process
+pgrep -l 'bash'
+
