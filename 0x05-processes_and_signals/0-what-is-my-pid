@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Script to get the id process
+ps r -o pid | sed -n 2p
