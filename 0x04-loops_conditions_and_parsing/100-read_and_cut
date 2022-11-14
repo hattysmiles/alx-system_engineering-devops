@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Script to
+FILENAME="/etc/passwd"
+
+while read -r read_file
+do
+  echo "${read_file}"
+done < ${FILENAME} | cut -d ":" -f 1,3,6
