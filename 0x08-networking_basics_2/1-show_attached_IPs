@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Display all active IPv4 IPS
+ifconfig | grep inet | awk '!/ether/ {print $2}' | grep '^[0-9]' | cut -d/ -f1
