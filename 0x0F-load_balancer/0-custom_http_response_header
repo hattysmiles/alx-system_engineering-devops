@@ -1,44 +1,30 @@
 #!/usr/bin/env bash
-# script to install and setup nginx
-CONFIG_FILE="/etc/nginx/sites-available/default"
-HOST_NAME=$(hostname)
-MY_ID=496
+# Install Nginx with server 0x01 config
+#+ add HTTP header named X-Served-By $HOSTNAME
 
-# check if hostname is correct
-if [[ $(hostname) =~ ^$MY_ID-web-[0-9]+ ]]; then
-    echo 'hostname properly configured'
-else
-    (>&2 echo 'hostname not configured properly...')
-    (>&2 echo 'please set hostname to pattern: 496-web-<server_id>...')
-    (>&2 echo 'Example: sudo hostnamectl set-hostname 496-web-<insert_server_id_here>')
-fi
+apt-get update
+apt-get install -y nginx
 
-# install nginx
-apt-get -y update
-apt-get -y install nginx
+mkdir -p /var/www/html
+touch /var/www/html/index.html
+echo "Holberton School" > /var/www/html/index.html
+touch /var/www/html/404.html
+echo "Ceci n'est pas une page" > /var/www/html/404.html
 
-# update index.html file
-echo 'Holberton School' > /usr/share/nginx/html/index.html
-echo "Ceci n'est pas une page" > /usr/share/nginx/html/404.html
-
-# update config file to redirect
 printf %s "server {
-    listen 80;
+    listen 80 default_server;
     listen [::]:80 default_server;
-    root   /usr/share/nginx/html;
+    add_header X-Served-By $HOSTNAME;
+    root   /var/www/html;
     index  index.html index.htm;
-    add_header X-Served-By $HOST_NAME;
     location /redirect_me {
-        return 301 http://google.com/;
+        return 301 https://www.youtube.com/watch?v=xJJsoquu70o/;
     }
     error_page 404 /404.html;
     location /404 {
-      root /usr/share/nginx/html;
+      root /var/www/html;
       internal;
     }
-}" > $CONFIG_FILE
+}" > /etc/nginx/sites-enabled/default
 
-# start nginx after reloading config
-service nginx start
-# if nginx was already running restart it
-service nginx restart
+sudo service nginx restart
